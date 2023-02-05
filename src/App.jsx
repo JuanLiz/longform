@@ -16,15 +16,22 @@ function App() {
   const [questions, setQuestions] = React.useState([]);
 
   React.useEffect(() => {
+
+    const getQuestions = async () => {
+      try {
+          const response = await axios.get('http://localhost:8080/api/questions')
+
+          setQuestions(response.data)
+
+      } catch (error) {
+          console.log(error)
+      }
+  }
+
+  getQuestions();
     // Get questions from API
-    axios.get('http://localhost:8080/api/questions')
-      .then((response) => {
-        setQuestions(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [questions]);
+
+  }, [setQuestions]);
 
   return (
     <Router>
@@ -37,7 +44,7 @@ function App() {
           </div>
         }
         >
-          <Route path=':idquestion' element={<Container/>}> </Route>
+          <Route path=':idquestion' element={<Container questions={questions}/>}> </Route>
         </Route>
       </Routes>
     </Router>
